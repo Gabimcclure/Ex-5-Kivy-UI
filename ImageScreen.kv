@@ -1,0 +1,12 @@
+<ImageScreen>
+    name: 'image'
+    FloatLayout:
+        size_hint: None, None
+
+    ImageButton:
+        id: logo_image_button
+        source: "../../pidev/kivy/images/DPEALogoTransparent.png"
+        size: 100, 100
+        x: root.width * 0.45
+        y: root.height * 0.20
+        on_press: root.transition_back()

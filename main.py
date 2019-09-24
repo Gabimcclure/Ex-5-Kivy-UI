@@ -4,6 +4,7 @@ from kivy.app import App
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.properties import StringProperty
 
 from pidev.MixPanel import MixPanel
 from pidev.kivy.PassCodeScreen import PassCodeScreen
@@ -11,13 +12,15 @@ from pidev.kivy.PauseScreen import PauseScreen
 from pidev.kivy import DPEAButton
 from pidev.kivy import ImageButton
 
+from kivy.uix.slider import Slider
+
 MIXPANEL_TOKEN = "x"
 MIXPANEL = MixPanel("Project Name", MIXPANEL_TOKEN)
 
 SCREEN_MANAGER = ScreenManager()
 MAIN_SCREEN_NAME = 'main'
 ADMIN_SCREEN_NAME = 'admin'
-
+IMAGE_SCREEN_NAME = 'image'
 
 class ProjectNameGUI(App):
     """
@@ -34,11 +37,19 @@ class ProjectNameGUI(App):
 
 Window.clearcolor = (1, 1, 1, 1)  # White
 
-
 class MainScreen(Screen):
+
+
     """
     Class to handle the main screen and its associated touch events
     """
+
+    string_value = StringProperty()
+
+    def __init__(self, **kwargs):
+        super(MainScreen,self).__init__(**kwargs)
+        self.count = 0
+
 
     def pressed(self):
         """
@@ -46,6 +57,11 @@ class MainScreen(Screen):
         :return: None
         """
         PauseScreen.pause(pause_scene_name='pauseScene', transition_back_scene='main', text="Test", pause_duration=5)
+
+
+    def pressed2(self):
+        self.count = self.count + 1
+        self.string_value = str(self.count)
 
     def admin_action(self):
         """
@@ -55,6 +71,9 @@ class MainScreen(Screen):
         """
         SCREEN_MANAGER.current = 'passCode'
 
+    def image_screen(self):
+
+        SCREEN_MANAGER.current = 'image'
 
 class AdminScreen(Screen):
     """
@@ -73,6 +92,15 @@ class AdminScreen(Screen):
         PassCodeScreen.set_transition_back_screen(MAIN_SCREEN_NAME)  # set screen name to transition to if "Back to Game is pressed"
 
         super(AdminScreen, self).__init__(**kwargs)
+
+class ImageScreen(Screen):
+
+    def __init__(self, **kwargs):
+
+        Builder.load_file('ImageScreen.kv')
+
+        super(ImageScreen, self).__init__(**kwargs)
+
 
     @staticmethod
     def transition_back():
@@ -106,7 +134,7 @@ SCREEN_MANAGER.add_widget(MainScreen(name=MAIN_SCREEN_NAME))
 SCREEN_MANAGER.add_widget(PassCodeScreen(name='passCode'))
 SCREEN_MANAGER.add_widget(PauseScreen(name='pauseScene'))
 SCREEN_MANAGER.add_widget(AdminScreen(name=ADMIN_SCREEN_NAME))
-
+SCREEN_MANAGER.add_widget(ImageScreen(name=IMAGE_SCREEN_NAME))
 """
 MixPanel
 """
