@@ -1,4 +1,5 @@
 import os
+import pygame
 
 from kivy.app import App
 from kivy.core.window import Window
@@ -6,14 +7,17 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
 from kivy.animation import Animation
+from kivy.uix.slider import Slider
 
 from pidev.MixPanel import MixPanel
 from pidev.kivy.PassCodeScreen import PassCodeScreen
 from pidev.kivy.PauseScreen import PauseScreen
 from pidev.kivy import DPEAButton
 from pidev.kivy import ImageButton
+from pidev.Joystick import Joystick
 
-from kivy.uix.slider import Slider
+from threading import Thread
+from time import sleep
 
 MIXPANEL_TOKEN = "x"
 MIXPANEL = MixPanel("Project Name", MIXPANEL_TOKEN)
@@ -77,6 +81,16 @@ class MainScreen(Screen):
 
         SCREEN_MANAGER.current = 'image'
 
+    def joy_update(self):
+        while True:
+            self.joy_x_val = joystick.get_axis('x')
+            self.joy_y_val = joystick.get_axis('y')
+            # your code to update the labels here
+            sleep(.1)
+
+    def start_joy_thread(self):
+        Thread(target=self.joy_update).start()
+
 class AdminScreen(Screen):
     """
     Class to handle the AdminScreen and its functionality
@@ -97,6 +111,8 @@ class AdminScreen(Screen):
 
 class ImageScreen(Screen):
 
+    joystick = Joystick(0, False)
+
     def __init__(self, **kwargs):
 
         Builder.load_file('ImageScreen.kv')
@@ -111,9 +127,10 @@ class ImageScreen(Screen):
         self.anim.repeat = True
         self.anim.start(self.ids.animation)
 
-
-
-
+    def joybuttons(self):
+        for x in range(11):
+            if self.joystick.get_button_state(x)==1:
+                self.ids.jbuttons.text = "Button Pressed: " + str(x)
 
     @staticmethod
     def transition_back():
