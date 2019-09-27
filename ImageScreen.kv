@@ -3,10 +3,21 @@
     FloatLayout:
         size_hint: None, None
 
-    ImageButton:
-        id: logo_image_button
-        source: "../../pidev/kivy/images/DPEALogoTransparent.png"
-        size: 100, 100
-        x: root.width * 0.45
-        y: root.height * 0.20
+    DPEAButton:
+        text: 'Go Back'
+        font_size: 10
+        size: 100, 50
+        x: root.width * .85
+        y: root.height * .9
+        color: 0, 0, 0, 1
         on_press: root.transition_back()
+
+    ImageButton:
+        id: animation
+        source: "/home/gabimcclure/Documents/Ex-5-Kivy-UI/Quokka_Sam-West.jpg"
+        size: 300, 150
+        x: root.width * 0.60
+        y: root.height * 0.05
+        on_press: root.animation()
+
+

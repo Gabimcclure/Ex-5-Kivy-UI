@@ -5,6 +5,7 @@ from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
+from kivy.animation import Animation
 
 from pidev.MixPanel import MixPanel
 from pidev.kivy.PassCodeScreen import PassCodeScreen
@@ -21,6 +22,7 @@ SCREEN_MANAGER = ScreenManager()
 MAIN_SCREEN_NAME = 'main'
 ADMIN_SCREEN_NAME = 'admin'
 IMAGE_SCREEN_NAME = 'image'
+
 
 class ProjectNameGUI(App):
     """
@@ -101,6 +103,17 @@ class ImageScreen(Screen):
 
         super(ImageScreen, self).__init__(**kwargs)
 
+    def animation(self):
+        self.anim = Animation(x=50) + Animation(size=(80, 80), duration=2.)
+        self.anim += Animation(x= 75) + Animation(size=(100,40), duration= 1.5)
+        self.anim += Animation(x=150) + Animation(size=(500, 340), duration=1.5)
+        self.anim += Animation(x=300) + Animation(size=(100, 40), duration=1.5)
+        self.anim.repeat = True
+        self.anim.start(self.ids.animation)
+
+
+
+
 
     @staticmethod
     def transition_back():
@@ -135,6 +148,7 @@ SCREEN_MANAGER.add_widget(PassCodeScreen(name='passCode'))
 SCREEN_MANAGER.add_widget(PauseScreen(name='pauseScene'))
 SCREEN_MANAGER.add_widget(AdminScreen(name=ADMIN_SCREEN_NAME))
 SCREEN_MANAGER.add_widget(ImageScreen(name=IMAGE_SCREEN_NAME))
+
 """
 MixPanel
 """
