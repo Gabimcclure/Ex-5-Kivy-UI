@@ -8,6 +8,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
 from kivy.animation import Animation
 from kivy.uix.slider import Slider
+from kivy.properties import ObjectProperty
 
 from pidev.MixPanel import MixPanel
 from pidev.kivy.PassCodeScreen import PassCodeScreen
@@ -27,7 +28,7 @@ MAIN_SCREEN_NAME = 'main'
 ADMIN_SCREEN_NAME = 'admin'
 IMAGE_SCREEN_NAME = 'image'
 
-
+joystick = Joystick(0, False)
 class ProjectNameGUI(App):
     """
     Class to handle running the GUI Application
@@ -44,26 +45,23 @@ class ProjectNameGUI(App):
 Window.clearcolor = (1, 1, 1, 1)  # White
 
 class MainScreen(Screen):
-
-
     """
     Class to handle the main screen and its associated touch events
     """
-
+    joy_x_val = ObjectProperty()
+    joy_y_val = ObjectProperty()
     string_value = StringProperty()
 
     def __init__(self, **kwargs):
         super(MainScreen,self).__init__(**kwargs)
         self.count = 0
 
-
     def pressed(self):
         """
         Function called on button touch event for button with id: testButton
         :return: None
         """
-        PauseScreen.pause(pause_scene_name='pauseScene', transition_back_scene='main', text="Test", pause_duration=5)
-
+        PauseScreen.pause(pause_scene_name='pauseScene', transition_back_scene='main', text="Test", pause_duration=1)
 
     def pressed2(self):
         self.count = self.count + 1
@@ -81,15 +79,23 @@ class MainScreen(Screen):
 
         SCREEN_MANAGER.current = 'image'
 
-    def joy_update(self):
+    def joy_update(self):  # This should be inside the MainScreen Class
         while True:
             self.joy_x_val = joystick.get_axis('x')
+            self.ids.joy_label_x.x = (self.joy_x_val)
             self.joy_y_val = joystick.get_axis('y')
-            # your code to update the labels here
+            self.ids.joy_label_y.y = (self.joy_y_val)
             sleep(.1)
 
+
     def start_joy_thread(self):
+
         Thread(target=self.joy_update).start()
+
+    def joy_button(self):
+        for x in range(11):
+            if self.joystick.get_button_state(x) == 1:
+                self.ids.jbuttons.text = (self.joy_button)
 
 class AdminScreen(Screen):
     """
@@ -111,7 +117,6 @@ class AdminScreen(Screen):
 
 class ImageScreen(Screen):
 
-    joystick = Joystick(0, False)
 
     def __init__(self, **kwargs):
 
@@ -121,16 +126,11 @@ class ImageScreen(Screen):
 
     def animation(self):
         self.anim = Animation(x=50) + Animation(size=(80, 80), duration=2.)
-        self.anim += Animation(x= 75) + Animation(size=(100,40), duration= 1.5)
+        self.anim += Animation(x=75) + Animation(size=(100,40), duration= 1.5)
         self.anim += Animation(x=150) + Animation(size=(500, 340), duration=1.5)
         self.anim += Animation(x=300) + Animation(size=(100, 40), duration=1.5)
         self.anim.repeat = True
         self.anim.start(self.ids.animation)
-
-    def joybuttons(self):
-        for x in range(11):
-            if self.joystick.get_button_state(x)==1:
-                self.ids.jbuttons.text = "Button Pressed: " + str(x)
 
     @staticmethod
     def transition_back():

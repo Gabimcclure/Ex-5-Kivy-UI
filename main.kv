@@ -64,6 +64,7 @@
         y: root.height * 0.60
         step: 1
         orientation: 'horizontal'
+
     Label:
         text: str(slider.value)
         size: 200, 200
@@ -84,6 +85,29 @@
         source: "/home/gabimcclure/Documents/Ex-5-Kivy-UI/Becky.jpg"
         size: 200, 200
         x: root.width * 0.37
-        y: root.height * 0.30
+        y: root.height * 0.10
         on_press: root.image_screen()
 
+    Label:
+        id: joy_label_x
+        text: "X: " + str(root.joy_x_val)
+        size: 200, 200
+        x: root.width * 0.50
+        y: root.height * 0.08
+        color: 0, 0, 0, 1
+
+    Label:
+        id: joy_label_y
+        text: "Y: " + str(root.joy_y_val)
+        size: 200, 200
+        x: root.width * 0.001
+        y: root.height * 0.5
+        color: 0, 0, 0, 1
+
+    Label:
+        id: jbuttons
+        text: "Button Pressed: " + str(root.joy_button)
+        size: 200, 200
+        x: root.width * 0.001
+        y: root.height * 0.45
+        color: 0, 0, 0, 1
