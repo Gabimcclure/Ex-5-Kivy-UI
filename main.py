@@ -29,6 +29,7 @@ ADMIN_SCREEN_NAME = 'admin'
 IMAGE_SCREEN_NAME = 'image'
 
 joystick = Joystick(0, False)
+
 class ProjectNameGUI(App):
     """
     Class to handle running the GUI Application
@@ -51,6 +52,7 @@ class MainScreen(Screen):
     joy_x_val = ObjectProperty()
     joy_y_val = ObjectProperty()
     string_value = StringProperty()
+    x_and_y_val = ObjectProperty()
 
     def __init__(self, **kwargs):
         super(MainScreen,self).__init__(**kwargs)
@@ -81,21 +83,18 @@ class MainScreen(Screen):
 
     def joy_update(self):  # This should be inside the MainScreen Class
         while True:
-            self.joy_x_val = joystick.get_axis('x')
-            self.ids.joy_label_x.x = (self.joy_x_val)
-            self.joy_y_val = joystick.get_axis('y')
-            self.ids.joy_label_y.y = (self.joy_y_val)
-            sleep(.1)
+            self.ids.joy_label.center_x = joystick.get_axis('x') * (self.width/2) + (self.width/2)
+            self.ids.joy_label.center_y = joystick.get_axis('y') * -(self.height / 2) + (self.height / 2)
 
+            self.ids.joy_label.text = " x = {:.3} y = {:.3} " .format((joystick.get_axis('x')), ((-1)*joystick.get_axis('y')))
+
+            self.ids.jbuttons.text = str(joystick.get_button_state(0))
+
+            sleep(.1)
 
     def start_joy_thread(self):
 
         Thread(target=self.joy_update).start()
-
-    def joy_button(self):
-        for x in range(11):
-            if self.joystick.get_button_state(x) == 1:
-                self.ids.jbuttons.text = (self.joy_button)
 
 class AdminScreen(Screen):
     """
